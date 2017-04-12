@@ -1,0 +1,10 @@
+package de.sbuettner.vs;
+
+public class KuehlschrankControler {
+	KuehlschrankControler kc;
+	public static void main(String[] args) {
+		
+
+	}
+
+}

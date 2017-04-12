@@ -1,0 +1,10 @@
+package de.sbuettner.vs;
+
+public class KuehlschrankControler {
+	static SocketServer ks = new SocketServer();
+	public static void main(String[] args) {
+		ks.run();
+
+	}
+
+}

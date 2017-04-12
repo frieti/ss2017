@@ -1,0 +1,47 @@
+package de.sbuettner.vs;
+
+// 05.04.16
+
+/**
+ *
+ * @author Peter Altenberd (Translated into English by Ronald Moore)
+ *         Computer Science Dept. Fachbereich Informatik Darmstadt Univ. of
+ *         Applied Sciences Hochschule Darmstadt
+ */
+
+import java.io.*;
+import java.net.*;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.List;
+
+public class SocketServer extends Thread {
+
+	static String line;
+	static BufferedReader fromClient;
+	static DataOutputStream toClient;
+	static List<String> history = new java.util.ArrayList<String>();
+	static FileWriter fw;
+
+	public void run(int port) {
+		System.out.println("Starting SocketServer Thread!");
+		ServerSocket contactSocket;
+		try {
+			contactSocket = new ServerSocket(port);		// original war Port 9999
+			fw = new FileWriter("history.log");
+			while (true) {								// Handle connection request
+				Socket client = contactSocket.accept(); // create communication socket
+				System.out.println("Connection with: " + client.getRemoteSocketAddress());
+				handleRequests(client);
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}	
+	}
+	
+	public void run() {
+		run(9003);
+	}
+
+	
+}

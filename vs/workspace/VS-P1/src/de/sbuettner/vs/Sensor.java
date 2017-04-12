@@ -13,50 +13,68 @@ import java.io.*;
 import java.net.*;
 import java.util.Properties;
 
-public class Sensor extends Thread {
+public class Sensor implements Runnable {
 
-	static String line;
-	static Socket socket;
-	static BufferedReader fromServer;
-	static DataOutputStream toServer;
-	static UserInterface user = new UserInterface();
-	static Properties props =new Properties();
+	Socket socket;
+	BufferedReader fromServer;
+	DataOutputStream toServer;
+	UserInterface user = new UserInterface();
+	static Properties props = new Properties();
 	static Reader reader;
+	String name;
+	int ml;
 
-	public static void main(String[] args) throws Exception {
-		reader = new FileReader( "vs.properties" );
-		props.load(reader);
-		System.out.println("Properties loaded!:"
-		+ "\nserverip:" + props.getProperty("serverip", "localhost")
-		+ "\nserverport:" + props.getProperty("serverport", "9002"));
-		
-		socket = new Socket(props.getProperty("serverip", "localhost"), Integer.parseInt(props.getProperty("serverport", "9002")));					// Original war Port 9000
-		toServer = new DataOutputStream(						// Datastream FROM Server
-				socket.getOutputStream());
-		fromServer = new BufferedReader(						// Datastream TO Server
-				new InputStreamReader(socket.getInputStream()));
-		while (sendRequest()) {									// Send requests while connected
-			receiveResponse();									// Process server's answer
-		}
-		socket.close();
-		toServer.close();
-		fromServer.close();
+	public Sensor(String name, int ml) {
+		this.name = name;
+		this.ml = ml;
 	}
 
-	private static boolean sendRequest() throws IOException {
-		boolean holdTheLine = true;								// Connection exists
-		user.output("Enter message for the Server, or end the session with . : ");
-		toServer.writeBytes((line = user.input()) + '\n');
-		if (line.equals(".")) {									// Does the user want to end the session?
-			holdTheLine = false;
-		}
-		return holdTheLine;
-	}
+	@Override public void run() {
+		try {
+			reader = new FileReader("vs.properties");
+			props.load(reader);
 
-	private static void receiveResponse() throws IOException {
-		user.output("Server answers: " + new String(fromServer.readLine()) + '\n');
+			socket = new Socket(props.getProperty("serverip", "localhost"),
+					Integer.parseInt(props.getProperty("serverport", "9002"))); // Original war Port 9000
+			toServer = new DataOutputStream(socket.getOutputStream());			// Datastream FROM Server		
+			fromServer = new BufferedReader(new InputStreamReader(socket.getInputStream()));	// Datastream TO Server
+					
+			while (ml!=0) {
+				System.out.println("Sending: " + name + ":" + Integer.toString(ml));
+				while (sendRequest(name + ":" + Integer.toString(ml))) {			// Send requests while connected
+					receiveResponse();												// Process server's answer
+				}
+				Thread.sleep(1000);
+				ml-=100;
+			}
+			while (sendRequest(".")) {											// Send . as finish of connection
+				receiveResponse();												// Process server's answer
+			}
+			close();
+			
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 	
-	public void run() {
+	public void close() {
+		try {
+			socket.close();
+			toServer.close();
+			fromServer.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	private boolean sendRequest(String message) throws IOException {
+		boolean holdTheLine = false; // Connection exists
+		toServer.writeBytes(message + '\n');
+	return holdTheLine;
+	}
+
+	private void receiveResponse() throws IOException {
+		System.out.println("Server answers: " + new String(fromServer.readLine()) + '\n');
 	}
 }

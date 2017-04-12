@@ -1,0 +1,32 @@
+package de.sbuettner.vs;
+
+public class KuehlschrankControler {
+	static SocketServer ks = new SocketServer();
+	int menu;
+	public void main(String[] args) {
+		
+		Thread t1;
+		ks.run();
+
+		while(menu!=0) {
+			System.out.println("KuehlschrankControler\nTim Friedrich und Sebastian Büttner");
+			System.out.println("(1) Start SocketServer");
+			System.out.println("(2) Stop SocketServer");
+			System.out.println("(0) Quit");
+			menu = System.console().reader().read();
+			
+			switch(menu) {
+			case 1:
+				t1 = new Thread(new SocketServer());
+				t1.run();
+				break;
+			case 2:
+				if(t1.isAlive()){
+					t1.sto
+				}
+				break;
+			}
+		}
+	}
+
+}
