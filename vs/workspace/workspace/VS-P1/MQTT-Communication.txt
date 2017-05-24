@@ -1,0 +1,33 @@
+MQTT-Connections zwischen Shops und Manufacturers
+
+	Shop				Manufacturer
+	  |		need			|
+	  |	----------------->	|
+	  |						|
+	  |		offer			|
+	  |	<-----------------	|
+	  |						|
+	  |		order			|
+	  |	----------------->	|
+	  |						|
+	  |						|
+	  
+	  
+	  
+Die Nachrichten Arten
+
+need
+Topic  : /VS/Manufacturer/need/ + article
+Message: int amount
+example: "2000"
+
+offer
+Topic  : /VS/Manufacturer/offer/ + article
+Message: int shopid; Double price (per 1000ml or 1000g)
+example: "12354143;1,15"
+
+
+order
+Topic  : /VS/Manufacturer/order/ + shopid
+Message: String article; int amount
+example: "milk;2000"
