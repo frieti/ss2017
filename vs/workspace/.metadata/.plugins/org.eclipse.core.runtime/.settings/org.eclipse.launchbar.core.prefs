@@ -1,0 +1,6 @@
+LaunchTargetManager/org.eclipse.launchbar.core.launchTargetType.local,Local/arch=x86_64
+LaunchTargetManager/org.eclipse.launchbar.core.launchTargetType.local,Local/os=win32
+configDescList=org.eclipse.launchbar.core.descriptorType.default\:Main,org.eclipse.launchbar.core.descriptorType.default\:Sensor,org.eclipse.launchbar.core.descriptorType.default\:New_configuration,org.eclipse.launchbar.core.descriptorType.default\:SensorMaster,org.eclipse.launchbar.core.descriptorType.default\:ShopTester,org.eclipse.launchbar.core.descriptorType.default\:ShopServiceServer,org.eclipse.launchbar.core.descriptorType.default\:Manufacturer,org.eclipse.launchbar.core.descriptorType.default\:KuehlschrankControler,org.eclipse.launchbar.core.descriptorType.default\:ManufacturerControler
+eclipse.preferences.version=1
+org.eclipse.launchbar.core.descriptorType.default\:KuehlschrankControler/activeLaunchMode=run
+org.eclipse.launchbar.core.descriptorType.default\:KuehlschrankControler/activeLaunchTarget=org.eclipse.launchbar.core.launchTargetType.local\:Local

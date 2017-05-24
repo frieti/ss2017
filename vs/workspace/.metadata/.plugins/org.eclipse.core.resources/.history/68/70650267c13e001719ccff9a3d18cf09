@@ -1,0 +1,24 @@
+MQTT-Connections zwischen Shops und Manufacturers
+
+	Shop				Manufacturer
+	  |		need			|
+	  |	----------------->	|
+	  |						|
+	  |		offer			|
+	  |	<-----------------	|
+	  |						|
+	  |		order			|
+	  |	----------------->	|
+	  |						|
+	  |						|
+	  
+	  
+	  
+Die Nachrichten Arten
+
+need
+/VS/Manufacturer/need/ + article
+
+id
+example:
+"

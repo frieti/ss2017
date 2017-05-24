@@ -1,0 +1,53 @@
+package de.sbuettner.vs.praktikum;
+
+import org.apache.thrift.TException;
+import org.eclipse.paho.client.mqttv3.MqttClient;
+import org.eclipse.paho.client.mqttv3.MqttException;
+import org.eclipse.paho.client.mqttv3.MqttMessage;
+import org.eclipse.paho.client.mqttv3.MqttSecurityException;
+
+public class ShopServiceHandler implements ShopService.Iface{
+	static MqttClient client;
+
+	@Override
+	public double getPrice(String article) throws TException {
+		double answer= 0.0;
+		switch (article) {
+		case "Milch":
+			answer = 1.10;
+			break;
+		case "OSaft":
+			answer = 1.20;
+			break;
+		case "Apfelsaft":
+			answer = 0.99;
+			break;
+		case "Wasser":
+			answer = 0.20;
+			break;
+		}
+		return answer;
+	}
+
+	@Override
+	public boolean order(String article, int amount) throws TException {
+		System.out.println("Somebody ordered: \nAmount Price\n" + amount + "    " + article);
+		
+		try {
+			need(article, amount);
+		} catch (MqttException e) {
+			e.printStackTrace();
+		}
+		
+		return true;
+	}
+	
+	
+	private void need(String article, int amount) throws MqttSecurityException, MqttException {
+		client.connect();
+
+		MqttMessage message = new MqttMessage(Integer.toString(amount).getBytes());
+		client.publish("VS/Manufacturer/need/" + article, message);
+		client.disconnect();
+	}
+}

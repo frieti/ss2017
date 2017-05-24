@@ -1,0 +1,99 @@
+package de.sbuettner.vs.praktikum;
+
+import java.util.HashMap;
+import java.util.Map;
+
+import org.apache.thrift.TException;
+import org.eclipse.paho.client.mqttv3.IMqttDeliveryToken;
+import org.eclipse.paho.client.mqttv3.MqttCallback;
+import org.eclipse.paho.client.mqttv3.MqttClient;
+import org.eclipse.paho.client.mqttv3.MqttException;
+import org.eclipse.paho.client.mqttv3.MqttMessage;
+import org.eclipse.paho.client.mqttv3.MqttSecurityException;
+
+public class ShopServiceHandler implements ShopService.Iface{
+	static MqttClient client;
+
+	@Override
+	public double getPrice(String article) throws TException {
+		double answer= 0.0;
+		switch (article) {
+		case "Milch":
+			answer = 1.10;
+			break;
+		case "OSaft":
+			answer = 1.20;
+			break;
+		case "Apfelsaft":
+			answer = 0.99;
+			break;
+		case "Wasser":
+			answer = 0.20;
+			break;
+		}
+		return answer;
+	}
+
+	@Override
+	public boolean order(String article, int amount) throws TException {
+		System.out.println("Somebody ordered: \nAmount Price\n" + amount + "    " + article);
+		
+		try {
+			int id = (int) Math.random();
+			need(article, amount, id);
+		} catch (MqttException e) {
+			e.printStackTrace();
+		}
+		
+		return true;
+	}
+	
+	
+	private void need(String article, int amount, int id) throws MqttSecurityException, MqttException {
+		client.connect();
+
+		MqttMessage message = new MqttMessage(Integer.toString(amount).getBytes());
+		client.publish("VS/Manufacturer/need/" + article, message);
+		client.disconnect();
+	}
+	
+	private void orderArticle(String article, int amount, final int id) throws MqttException, InterruptedException {
+		final Map<Integer, Double> offers = new HashMap<Integer,Double>();
+		client.setCallback(new MqttCallback() {
+			@Override
+		       public void connectionLost(Throwable throwable) { }
+		 
+		       @Override
+		       public void messageArrived(String t, MqttMessage m) throws Exception {
+		    	   
+		         System.out.println(new String(m.getPayload()));
+		         String mes = new String(m.getPayload());
+		         String[] mesp = mes.split(";");
+		         if (Integer.parseInt(mesp[0])==id) {
+		        	 offers.put(Integer.parseInt(mesp[1]), Double.parseDouble(mesp[2]));
+		         }
+		       }
+		 
+		       @Override
+		       public void deliveryComplete(IMqttDeliveryToken t) { }
+		       });
+		
+		client.subscribe("VS/Manufacturer/offer/" + article);
+		Thread.sleep(5000);
+		if (!offers.isEmpty()) {
+			int shopkey=offers.keySet().iterator().next();
+			for (Map.Entry<Integer, Double> entry: offers.entrySet()){
+				if (entry.getValue() < offers.get(shopkey)) {
+					
+				}
+			}
+			client.publish("VS/Manufaturer/order/" + shopkey, article + ":" + amount);
+		}
+		
+		client.connect();
+		
+		
+		
+		client.disconnect();
+	}
+}

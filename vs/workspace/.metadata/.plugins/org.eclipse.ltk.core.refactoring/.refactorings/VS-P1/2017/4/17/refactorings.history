@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">
+<refactoring comment="Convert local variable &apos;de.sbuettner.vs.SocketServer.run().fw&apos; in &apos;de.sbuettner.vs.SocketServer.run()&apos; to field&#x0D;&#x0A;- Original project: &apos;VS-P1&apos;&#x0D;&#x0A;- Original element: &apos;de.sbuettner.vs.SocketServer.run().fw&apos;&#x0D;&#x0A;- Field name: &apos;fw&apos;&#x0D;&#x0A;- Initialize field in method&#x0D;&#x0A;- Declared visibility: &apos;private&apos;" description="Convert local variable &apos;fw&apos; to field" final="false" flags="2" id="org.eclipse.jdt.ui.promote.temp" initialize="1" input="/src&lt;de.sbuettner.vs{SocketServer.java" name="fw" selection="754 43" stamp="1493025039680" static="false" version="1.0" visibility="2"/>
+</session>
