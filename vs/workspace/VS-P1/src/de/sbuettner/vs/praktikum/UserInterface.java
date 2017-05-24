@@ -1,4 +1,4 @@
-package de.sbuettner.vs;
+package de.sbuettner.vs.praktikum;
 
 //05.04.16
 
